@@ -22,9 +22,10 @@ class RegistrationSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255, write_only=True)
-    toke = serializers.CharField(max_length=255, read_only=True)
+    token = serializers.CharField(max_length=255, read_only=True)
 
     class Meta:
+        model = User
         fields = ('email', 'password', 'token')
 
     def validate(self, data):
