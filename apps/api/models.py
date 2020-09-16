@@ -7,11 +7,11 @@ class Tutorial(models.Model):
     class Meta:
         verbose_name_plural = 'tutorials'
 
-    title = models.CharField(blank=True)
+    title = models.CharField(max_length=255)
     #not sure about this
     owner = models.ForeignKey(UserManager)
     description = models.TextField(blank=True)
-    image = models.ImageField
+    image = models.ImageField(blank=True)
     materials = models.TextField(blank=True)
     procedure = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -24,7 +24,7 @@ class Product(models.Model):
     class Meta:
         verbose_name_plural = 'products'
 
-    image = models.ImageField
+    image = models.ImageField(blank=True)
     description = models.CharField(max_length=100)
     owner = models.ForeignKey(UserManager)
 
