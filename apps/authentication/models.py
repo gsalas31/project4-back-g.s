@@ -1,72 +1,107 @@
 from django.db import models
-# to import features we enter the following
 from django.contrib.auth.models import (
-    AbstractBaseUser, BaseUserManager, PermissionsMixin
+	AbstractBaseUser, BaseUserManager, PermissionsMixin
 )
-# Allows us to set the jwt settings
 from rest_framework_jwt.settings import api_settings
 
-# checking credentials
+# Our JWT payload
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
-# Create your models here.
-
 class UserManager(BaseUserManager):
-    def create_user(self, email, fullname=None, password=None):
-        if email is None:
-            raise TypeError('Must enter an email')
-        # creating user object
-        user = self.model(
-            fullname=fullname,
-            # check if the email is valid, normalize by lowercasing
-            email=self.normalize_email(email),
-            # this states that every time a user creates an account they are regular users
-            is_staff=False
-        )
-        # encryption and info been stored in db
-        user.set_password(password)
-        user.save()
+	"""
+	Django requires that custom users define their own Manager class. By
+	inheriting from `BaseUserManager`, we get a lot of the same code used by
+	Django to create a `User`.
 
-        return user
+	All we have to do is override the `create_user` function which we will use
+	to create `User` objects.
+	"""
 
-    # creating a super-user
-    def create_superuser(self, email, password):
-        if password is None:
-            raise TypeError("Must have a password")
-        user = self.create_superuser(email, password)
-        user.is_superuser = True
-        user.is_staff = True
-        user.save()
+	def create_user(self, username, email, password=None, first_name=None,
+	                last_name=None):
+		"""
+		Create and return a `User` with an email, username, first_name, last_name
+		and password.
+		"""
+		if username is None:
+			raise TypeError("Users must have a username")
+		if email is None:
+			raise TypeError("Users must have an email address")
+		user = self.model(
+			username=username,
+			email=self.normalize_email(email),
+			first_name=first_name,
+			last_name=last_name,
+			is_staff=False,
+		)
+		user.set_password(password)
+		user.save()
 
-        return user
+		return user
+
+	def create_superuser(self, username, email, password):
+		"""
+		Create and return a `User` with superuser (admin) permissions.
+		"""
+		if password is None:
+			raise TypeError("Superusers must have a password")
+		user = self.create_user(username, email, password)
+		user.is_superuser = True
+		user.is_staff = True
+		user.save()
+
+		return user
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(db_index=True, unique=True)
-    fullname = models.CharField(max_length=255, null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    # this will need to be change to false / later on
-    is_staff = models.BooleanField(default=True)
-    # creating a permanent record for new user
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+	"""
+	Class to represent user model
+	"""
+	username = models.CharField(db_index=True, max_length=255, unique=True)
+	email = models.EmailField(db_index=True, unique=True)
+	first_name = models.CharField(max_length=255, null=True, blank=True)
+	last_name = models.CharField(max_length=255, null=True, blank=True)
+	is_active = models.BooleanField(default=True)
+	is_staff = models.BooleanField(default=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email']
 
-    # User manger defined above should manage objects of this type
-    objects = UserManager()
+	# *** REQUIRED_FIELDS = ['email', 'first_name', 'last_name'] ***
 
-    def __str__(self):
-        return self.email
+	# Tells Django that the UserManager class defined above should manage
+	# objects of this type.
+	objects = UserManager()
 
-    @property
-    def token(self):
-        return self._generate_jwt_token()
+	def __str__(self):
+		"""
+		Returns a string representation of this `User`.
 
-    def _generate_jwt_token(self):
-        payload = jwt_encode_handler(self)
-        token = jwt_payload_handler(payload)
-        return token
+		This string is used when a `User` is printed in the console.
+		"""
+		return self.username
+
+	@property
+	def token(self):
+		"""
+		Allows us to get a user's token by calling `user.token` instead of
+		`user.generate_jwt_token().
+
+		The `@property` decorator above makes this possible. `token` is called
+		a "dynamic property".
+		"""
+		return self._generate_jwt_token()
+
+	def _generate_jwt_token(self):
+		"""
+		Generates a JSON Web Token that stores this user's instance and has an expiry
+		date set to 60 days into the future.
+		"""
+		payload = jwt_payload_handler(self)
+		token = jwt_encode_handler(payload)
+
+		return token
