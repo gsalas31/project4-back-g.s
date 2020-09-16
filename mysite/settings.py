@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+import os
 import datetime
 from pathlib import Path
 
@@ -39,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps.authentication',
+    'apps.api',
+    'apps.user_api',
 ]
 
 MIDDLEWARE = [
@@ -115,7 +118,7 @@ REST_FRAMEWORK = {
     ),
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 3
+    'PAGE_SIZE': 10
 }
 
 # Overriding DRF JWT settings
@@ -144,3 +147,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
