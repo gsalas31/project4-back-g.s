@@ -13,7 +13,7 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 # Create your models here.
 
 class UserManager(BaseUserManager):
-    def create_user(self, fullname= None, email, password=None):
+    def create_user(self, email, fullname=None, password=None):
         if email is None:
             raise TypeError('Must enter an email')
         #creating user object
@@ -68,10 +68,3 @@ class User(AbstractBaseUser, PermissionsMixin):
         token = jwt_payload_handler(payload)
 
         return token
-
-
-
-
-
-
-

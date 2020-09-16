@@ -20,7 +20,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 class LoginSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(max_length=255, write_only= True)
+    email = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255, write_only=True)
     toke = serializers.CharField(max_length=255, read_only=True)
 
@@ -59,4 +59,3 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email')
-
