@@ -54,7 +54,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
         return{
             'email': user.email,
-            'toke': user.token
+            'token': user.token
         }
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:
