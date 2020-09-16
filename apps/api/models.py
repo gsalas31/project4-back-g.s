@@ -13,7 +13,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
 class Product(models.Model):
     class Meta:
         verbose_name_plural = 'products'
@@ -28,20 +27,35 @@ class Product(models.Model):
     def __str__(self):
         return self.image
 
-#
-# class Tutorial(models.Model):
-#     class Meta:
-#         verbose_name_plural = 'tutorials'
-#
-#     title = models.CharField(max_length=255)
-#     #not sure about this
-#     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-#     description = models.TextField(blank=True)
-#     image = models.ImageField(blank=True)
-#     materials = models.TextField(blank=True)
-#     procedure = models.TextField(blank=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
-#
-#     def __str__(self):
-#         return self.title
+
+class Comment(models.Model):
+    class Meta:
+        verbose_name_plural = 'comments'
+
+    subject = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='products', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject
+
+
+class Tutorial(models.Model):
+    class Meta:
+        verbose_name_plural = 'tutorials'
+
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    image = models.ImageField(blank=True)
+    materials = models.TextField(blank=True)
+    procedure = models.TextField(blank=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='categories', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
