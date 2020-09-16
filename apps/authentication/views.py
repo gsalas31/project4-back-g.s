@@ -17,6 +17,7 @@ class RegistrationAPIView(APIView):
         user = request.data.get('user', {})
         if not user:
             user = {
+                'fullname': request.data.get('fullname'),
                 'email': request.data.get('email'),
                 'password': request.data.get('password')
             }
