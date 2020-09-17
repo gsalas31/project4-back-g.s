@@ -82,7 +82,26 @@ class SingleCategoryProduct(generics.RetrieveUpdateDestroyAPIView):
             )
             return queryset
 
+class ProductsViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProductSerializer
 
+    def get_queryset(self):
+        queryset = Product.objects.all().filter(owner=self.request.user)
+        return queryset
+    def create (self, request, *args, **kwargs):
+        if request.user.is_anonymous:
+            raise PermissionDenied(
+                "Only logged in users with an existing account can create products"
+            )
+        return super().create(request, *args, **kwargs)
+    def destroy(self, request, *args, **kwargs):
+        product = Product.objects.get(pk=self.kwargs['pk'])
+        if not request.user == product.owner:
+            raise PermissionDenied(
+                'You dont have permission to proceed with deletion'
+            )
+        return super().destroy(request, *args, **kwargs)
 
 
 
@@ -126,6 +145,33 @@ class SingleCategoryTutorial(generics.RetrieveUpdateDestroyAPIView):
             return queryset
 
 
+class TutorialViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TutorialSerializer
+
+    def get_queryset(self):
+        queryset = Tutorial.objects.all().filter(owner=self.request.user)
+        return queryset
+    def create (self, request, *args, **kwargs):
+        if request.user.is_anonymous:
+            raise PermissionDenied(
+                "Only logged in users with an existing account can create a tutorial"
+            )
+        return super().create(request, *args, **kwargs)
+    def destroy(self, request, *args, **kwargs):
+        tutorial = Tutorial.objects.get(pk=self.kwargs['pk'])
+        if not request.user == tutorial.owner:
+            raise PermissionDenied(
+                'You dont have permission to proceed with deletion'
+            )
+        return super().destroy(request, *args, **kwargs)
+
+
+
+
+
+
+
 
 
 
@@ -164,4 +210,23 @@ class SingleProductComment(generics.RetrieveUpdateDestroyAPIView):
             )
             return queryset
 
+class CommentViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CommentSerializer
 
+    def get_queryset(self):
+        queryset = Comment.objects.all().filter(owner=self.request.user)
+        return queryset
+    def create (self, request, *args, **kwargs):
+        if request.user.is_anonymous:
+            raise PermissionDenied(
+                "Only logged in users with an existing account can create comments"
+            )
+        return super().create(request, *args, **kwargs)
+    def destroy(self, request, *args, **kwargs):
+        comment = Comment.objects.get(pk=self.kwargs['pk'])
+        if not request.user == comment.owner:
+            raise PermissionDenied(
+                'You dont have permission to proceed with deletion'
+            )
+        return super().destroy(request, *args, **kwargs)
