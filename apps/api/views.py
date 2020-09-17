@@ -17,6 +17,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Category.objects.all().filter(owner=self.request.user)
+        return queryset
 
     def perform_create(self, request, *args, **kwargs):
         #check if the category already exists
@@ -208,8 +209,8 @@ class ProductComments(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        if self.kwargs.get('category_pk'):
-            product = Product.objects.get(pk=self.kwargs['category_pk'])
+        if self.kwargs.get('product_pk'):
+            product = Product.objects.get(pk=self.kwargs['product_pk'])
             queryset = Comment.objects.filter(
                 owner=self.request.user,
                 product=product
@@ -225,8 +226,8 @@ class SingleProductComment(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         # localhost:800/products/product/product_pk<1>/comment/pk<1>/
-        if self.kwargs.get("category_pk") and self.kwargs.get('pk'):
-            product = Product.objects.get(pk=self.kwargs['category_pk'])
+        if self.kwargs.get("product_pk") and self.kwargs.get('pk'):
+            product = Product.objects.get(pk=self.kwargs['product_pk'])
             queryset = Comment.objects.filter(
                 pk=self.kwargs['pk'],
                 owner=self.request.user,
