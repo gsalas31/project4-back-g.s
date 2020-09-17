@@ -1,5 +1,7 @@
 from django.urls import path, include
 from django.conf.urls import url
+from django.conf.urls.static import static
+from django.conf import settings
 from rest_framework import routers
 from apps.api.views import CategoryViewSet, CategoryProducts, SingleCategoryProduct, ProductsViewSet,\
     CategoryTutorials, SingleCategoryTutorial, TutorialViewSet, SingleProductComment,\
@@ -20,9 +22,9 @@ custom_urlpatterns = [
         name='single_category_tutorial'),
     url(r'categories/(?P<category_pk>\d+)/products/(?P<pk>\d+)/comments$', ProductComments.as_view(),
         name='product_comments'),
-    url(r'categories/(?P<category_pk>\d+)/products/(?P<pk>\d+)/comments/(?P<pk>\d+)$', SingleProductComment.as_view(),
+    url(r'single_category_tutorial/comments/(?P<pk>\d+)$', SingleProductComment.as_view(),
         name='single_product_comments'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_URL  )
 
 urlpatterns = router.urls
 urlpatterns += custom_urlpatterns
