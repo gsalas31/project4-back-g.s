@@ -263,6 +263,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         comment = Comment.objects.get(pk=self.kwargs['pk'])
         if not request.user == comment.owner:
             raise PermissionDenied(
-                'You dont have permission to edit this product'
+                'You dont have permission to edit this comment'
             )
         return super().update(request, *args, **kwargs)
