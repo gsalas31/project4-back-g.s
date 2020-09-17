@@ -95,6 +95,10 @@ class ProductsViewSet(viewsets.ModelViewSet):
                 "Only logged in users with an existing account can create products"
             )
         return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
     def destroy(self, request, *args, **kwargs):
         product = Product.objects.get(pk=self.kwargs['pk'])
         if not request.user == product.owner:
@@ -102,6 +106,14 @@ class ProductsViewSet(viewsets.ModelViewSet):
                 'You dont have permission to proceed with deletion'
             )
         return super().destroy(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        product = Product.objects.get(pk=self.kwargs['pk'])
+        if not request.user == product.owner:
+            raise PermissionDenied(
+                'You dont have permission to edit this product'
+            )
+        return super().update(request, *args, **kwargs)
 
 
 
@@ -158,6 +170,10 @@ class TutorialViewSet(viewsets.ModelViewSet):
                 "Only logged in users with an existing account can create a tutorial"
             )
         return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
     def destroy(self, request, *args, **kwargs):
         tutorial = Tutorial.objects.get(pk=self.kwargs['pk'])
         if not request.user == tutorial.owner:
@@ -165,6 +181,14 @@ class TutorialViewSet(viewsets.ModelViewSet):
                 'You dont have permission to proceed with deletion'
             )
         return super().destroy(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        tutorial = Tutorial.objects.get(pk=self.kwargs['pk'])
+        if not request.user == tutorial.owner:
+            raise PermissionDenied(
+                'You dont have permission to edit this tutorial'
+            )
+        return super().update(request, *args, **kwargs)
 
 
 
@@ -223,6 +247,10 @@ class CommentViewSet(viewsets.ModelViewSet):
                 "Only logged in users with an existing account can create comments"
             )
         return super().create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
     def destroy(self, request, *args, **kwargs):
         comment = Comment.objects.get(pk=self.kwargs['pk'])
         if not request.user == comment.owner:
@@ -230,3 +258,11 @@ class CommentViewSet(viewsets.ModelViewSet):
                 'You dont have permission to proceed with deletion'
             )
         return super().destroy(request, *args, **kwargs)
+
+    def partial_update(self, request, *args, **kwargs):
+        comment = Comment.objects.get(pk=self.kwargs['pk'])
+        if not request.user == comment.owner:
+            raise PermissionDenied(
+                'You dont have permission to edit this product'
+            )
+        return super().update(request, *args, **kwargs)
