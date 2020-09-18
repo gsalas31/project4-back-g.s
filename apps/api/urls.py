@@ -22,7 +22,7 @@ custom_urlpatterns = [
         name='single_category_tutorial'),
     url(r'categories/(?P<category_pk>\d+)/products/(?P<pk>\d+)/comments$', ProductComments.as_view(),
         name='product_comments'),
-    url(r'products/(?P<product_pk>\d+)/comments/(?P<pk>\d+)$', SingleProductComment.as_view(),
+    url(r'products/(?P<pk>\d+)/comments$', SingleProductComment.as_view(),
         name='single_product_comments'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_URL)
 

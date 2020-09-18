@@ -16,7 +16,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
 
     def get_queryset(self):
-        queryset = Category.objects.all().filter(owner=self.request.user)
+        queryset = Category.objects.all()
         return queryset
 
     def perform_create(self, request, *args, **kwargs):
@@ -88,7 +88,7 @@ class ProductsViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
 
     def get_queryset(self):
-        queryset = Product.objects.all().filter(owner=self.request.user)
+        queryset = Product.objects.all()
         return queryset
     def create (self, request, *args, **kwargs):
         if request.user.is_anonymous:
@@ -163,7 +163,7 @@ class TutorialViewSet(viewsets.ModelViewSet):
     serializer_class = TutorialSerializer
 
     def get_queryset(self):
-        queryset = Tutorial.objects.all().filter(owner=self.request.user)
+        queryset = Tutorial.objects.all()
         return queryset
     def create (self, request, *args, **kwargs):
         if request.user.is_anonymous:
@@ -226,8 +226,8 @@ class SingleProductComment(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         # localhost:800/products/product/product_pk<1>/comment/pk<1>/
-        if self.kwargs.get("product_pk") and self.kwargs.get('pk'):
-            product = Product.objects.get(pk=self.kwargs['product_pk'])
+        if self.kwargs.get("pk"):
+            product = Product.objects.get(pk=self.kwargs['pk'])
             queryset = Comment.objects.filter(
                 pk=self.kwargs['pk'],
                 owner=self.request.user,
@@ -240,7 +240,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        queryset = Comment.objects.all().filter(owner=self.request.user)
+        # to get some
+        # queryset = Comment.objects.all()[:24]
+        queryset = Comment.objects.all()
         return queryset
     def create (self, request, *args, **kwargs):
         if request.user.is_anonymous:

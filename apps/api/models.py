@@ -20,7 +20,7 @@ class Product(models.Model):
         verbose_name_plural = 'products'
 
     description = models.CharField(max_length=100)
-    image = models.ImageField(blank=True)
+    image = models.URLField(blank=True, max_length=300)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -37,7 +37,7 @@ class Comment(models.Model):
     subject = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, related_name='products', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='comments', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -51,11 +51,11 @@ class Tutorial(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    image = models.ImageField(blank=True)
+    image = models.URLField(blank=True, max_length=300)
     materials = models.TextField(blank=True)
     procedure = models.TextField(blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, related_name='categories', on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, related_name='tutorials', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
