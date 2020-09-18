@@ -24,7 +24,7 @@ custom_urlpatterns = [
         name='product_comments'),
     url(r'products/(?P<product_pk>\d+)/comments/(?P<pk>\d+)$', SingleProductComment.as_view(),
         name='single_product_comments'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_URL  )
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_URL)
 
 urlpatterns = router.urls
 urlpatterns += custom_urlpatterns
