@@ -55,7 +55,9 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware'
 ]
 CORS_ALLOW_ALL_ORIGINS = True
-
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = ['http://localhost:8080']
+CORS_ORIGIN_REGEX_WHITELIST = ['http://localhost:8080']
 
 ROOT_URLCONF = 'mysite.urls'
 
@@ -121,7 +123,7 @@ REST_FRAMEWORK = {
     ),
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'PAGE_SIZE': 10
+    # 'PAGE_SIZE': 100
 }
 
 # Overriding DRF JWT settings
