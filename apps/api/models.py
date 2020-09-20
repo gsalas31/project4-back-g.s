@@ -35,7 +35,7 @@ class Comment(models.Model):
         verbose_name_plural = 'comments'
 
     subject = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    the_comment = models.TextField(blank=True)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='comments', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
